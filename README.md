@@ -19,6 +19,7 @@ The main features of this module are:
 * Elixir
 * Erlang
 * Docker (and docker compose)
+  * Note that all examples in this document use `docker compose` which is the MacOS syntax. In unix we have to use `docker-compose` instead (also, it may require `sudo`)
 
 I have included a `.tool-versions` file so we can use `asdf install` and install the dependencies automatically (See [asdf](https://asdf-vm.com/))
 

@@ -55,7 +55,6 @@ RUN mix compile
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
-COPY rel rel
 RUN mix release
 
 # start a new build stage so that the final image will only contain
@@ -89,7 +88,6 @@ USER nobody
 # above and adding an entrypoint. See https://github.com/krallin/tini for details
 # ENTRYPOINT ["/tini", "--"]
 
-CMD ["/app/bin/server"]
 CMD trap 'exit' INT; \
   /app/bin/geolocator eval "Geolocator.Release.migrate" && \
-  /app/bin/server
+  PHX_SERVER=true /app/bin/geolocator start
