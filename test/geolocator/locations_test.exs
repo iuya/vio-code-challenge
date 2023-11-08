@@ -1,5 +1,5 @@
 defmodule Geolocator.LocationsTest do
-  use Geolocator.DataCase
+  use ExUnit.Case
 
   import Mox
 

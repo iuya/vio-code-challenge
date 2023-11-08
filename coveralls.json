@@ -1,0 +1,15 @@
+{
+    "terminal_options": {
+        "file_column_width": 80
+    },
+    "skip_files": [
+        "lib/geolocator_web.ex",
+        "lib/geolocator_web/endpoint.ex",
+        "lib/geolocator_web/telemetry.ex",
+        "lib/geolocator.ex",
+        "lib/geolocator/release.ex",
+        "lib/geolocator/repo.ex",
+        "lib/mix/tasks",
+        "test/support"
+    ]
+}

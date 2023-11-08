@@ -15,21 +15,23 @@ defmodule Geolocator.Loader do
   @spec load_from_csv(String.t()) :: {:ok, Stats.t()} | {:error, :no_such_path}
   def load_from_csv(file_path) do
     if File.exists?(file_path) do
-      {elapsed_time_ms, {accepted, discarded}} = :timer.tc(&do_load_from_csv/1, [file_path])
+      stream =
+        file_path
+        |> Path.expand()
+        |> File.stream!([read_ahead: 100_000], 1000)
+
+      batch_size = batch_size()
+      IO.puts("Attempting csv load with batch size #{batch_size}")
+      {elapsed_time_ms, {accepted, discarded}} = :timer.tc(&load_stream/2, [stream, batch_size])
       {:ok, Stats.new(accepted, discarded, elapsed_time_ms)}
     else
       {:error, :no_such_path}
     end
   end
 
-  @spec do_load_from_csv(String.t()) :: {accepted :: integer, discarded :: integer}
-  def do_load_from_csv(file_path) do
-    batch_size = batch_size()
-
-    IO.puts("Attempting csv load with batch size #{batch_size}")
-
-    file_path
-    |> File.stream!([read_ahead: 100_000], 1000)
+  @spec load_stream(File.Stream.t(), integer()) :: {accepted :: integer, discarded :: integer}
+  def load_stream(stream, batch_size) do
+    stream
     |> CSV.decode(headers: true, field_transform: &String.trim/1)
     |> Stream.chunk_every(batch_size)
     |> Stream.map(fn chunk_of_rows ->
